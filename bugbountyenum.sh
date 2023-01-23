@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Bash script for bug bounty recon using subfinder, httpx, dirsearch, gau, waybackurls, nmap, findomain
+#Bash script for bug bounty recon using subfinder, httpx, dirsearch, gau, waybackurls, nmap, findomain, vulscan & nmap_vulners
 
 function ctrl_c(){
   echo -e "\n\n [!] Leaving...\n"
