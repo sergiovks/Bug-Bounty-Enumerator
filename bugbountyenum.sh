@@ -7,7 +7,6 @@ function ctrl_c(){
   exit 1
 }
 
-
 # Ctrl+C
 trap ctrl_c INT
 
