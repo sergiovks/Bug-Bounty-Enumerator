@@ -13,7 +13,7 @@ trap ctrl_c INT
 #Get the target domain
 echo "Please enter the target domain:"
 read domain
-echo "A directory named bugbountyCrawler will be created right here..."
+echo "A directory named bugbountyEnum will be created right here..."
 mkdir bugbountyEnum
 cd bugbountyEnum
 
@@ -50,26 +50,26 @@ findomain -t $domain
 
 echo "Running nmap, this may take a while..."
 echo "Enumerating directories on the domain given at the start..."
-nmap --script http-enum $domain
+nmap --script http-enum $domain -oN httpenumDomain
 
 echo "Enumerating directories on the subdomains acquired from findomain..."
 for dominio in $(findomain -t $domain); do
-	nmap --script http-enum $dominio done
+	nmap --script http-enum $dominio done -oN httpenumSubdomains
 done
 
 echo "Enumerating possible vulnerabilities on the domain given..."
-nmap --script http-vulners-regex.nse [--script-args paths={"/"}] $domain
+nmap --script http-vulners-regex.nse [--script-args paths={"/"}] $domain -oN vulnersDomain
 
 echo "Enumerating possible vulnerabilities on the subdomains from findomain..."
 for dominio in $(findomain -t $domain); do
-	nmap --script http-vulners-regex.nse [--script-args paths={"/"}] $dominio
+	nmap --script http-vulners-regex.nse [--script-args paths={"/"}] $dominio -oN vulnersSubdomain
 done
 
 echo "Enumerating services vulnerabilities for the domain given at the start..."
-nmap -sV --script=vulscan/vulscan.nse $domain
+nmap -sV --script=vulscan/vulscan.nse $domain -oN vulscandomain
 
 echo "Enumerating services vulnerabilities for the subdomains acquired from findomain ..."
 for dominio in $(findomain -t $domain); do
 
-	nmap -sV --script=vulscan/vulscan.nse $dominio --script-args vulscanoutput='ID: {id} - Title: {title} - Version: {version} - Link: {link} ({matches})\n'
+	nmap -sV --script=vulscan/vulscan.nse $dominio --script-args vulscanoutput='ID: {id} - Title: {title} - Version: {version} - Link: {link} ({matches})\n' -oN vulscansubdomains
 done
